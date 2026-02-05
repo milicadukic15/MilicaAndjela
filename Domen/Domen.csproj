@@ -44,7 +44,6 @@
     <Compile Include="Entiteti\Apartman.cs" />
     <Compile Include="Entiteti\Gost.cs" />
     <Compile Include="Entiteti\Osoblje.cs" />
-    <Compile Include="Enumeracije\FunkcijaOsoblja.cs" />
     <Compile Include="Enumeracije\KlasaApartmana.cs" />
     <Compile Include="Enumeracije\StanjeAlarma.cs" />
     <Compile Include="Enumeracije\StanjeApartmana.cs" />
