@@ -36,7 +36,7 @@ namespace Server
                 List<Socket> checkRead = new List<Socket>();
                 checkRead.Add(listenSocket);
                 checkRead.Add(udpSocket);
-                foreach (Socket s in klijenti) checkRead.Add(s);
+                foreach (Socket s in klijenti.ToList()) checkRead.Add(s);
 
                 Socket.Select(checkRead, null, null, 1000000);
 
