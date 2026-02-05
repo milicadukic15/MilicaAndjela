@@ -73,6 +73,8 @@ namespace Server
                             }
                             string odgovorOsoblja = Encoding.UTF8.GetString(buffer, 0, primljeno);
                             Console.WriteLine($"[POTVRDA OSOBLJA]: {odgovorOsoblja}");
+
+                            AzurirajStanjeHotela(odgovorOsoblja);
                         }
                         catch
                         {
@@ -80,6 +82,37 @@ namespace Server
                             klijenti.Remove(s);
                             break;
                         }
+                    }
+                }
+            }
+        }
+
+        static void AzurirajStanjeHotela(string poruka)
+        {
+            string[] delovi = poruka.Split('|');
+            if (delovi.Length < 2) return;
+
+            string sadrzaj = delovi[1];
+
+            foreach (var ap in mojHotel.Apartmani)
+            {
+                if (sadrzaj.Contains(ap.BrojApartmana.ToString()))
+                {
+                    if (sadrzaj.Contains("očišćena"))
+                    {
+                        ap.Stanje = StanjeApartmana.PRAZAN;
+                        Console.WriteLine($" Soba {ap.BrojApartmana} je očišćena. Stanje: PRAZAN.");
+                    }
+
+                    else if (sadrzaj.Contains("saniran"))
+                    {
+                        ap.Alarm = StanjeAlarma.NORMALNO;
+                        Console.WriteLine($"Alarm u sobi {ap.BrojApartmana} je ugašen. Stanje: NORMALNO.");
+                    }
+
+                    else if (sadrzaj.Contains("Narudžbina"))
+                    {
+                        Console.WriteLine($"Dostava izvršena u sobi {ap.BrojApartmana}. Nema promene stanja.");
                     }
                 }
             }
@@ -107,11 +140,6 @@ namespace Server
                         {
                             if (radnik.Connected) radnik.Send(zadatakBajtovi);
                         }
-                        Console.WriteLine("[OSOBLJE]: Zadatak poslat.");
-
-                        byte[] gostBuffer = new byte[1024];
-                        server.ReceiveFrom(gostBuffer, ref ep);
-                        Console.WriteLine("[ZADATAK 3]: Primljeni binarni podaci o gostu.");
                     }
                 }
             }

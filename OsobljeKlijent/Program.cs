@@ -14,7 +14,7 @@ namespace OsobljeKlijent
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("=== OSOBLJE KLIJENT (TCP) ===");
+            Console.WriteLine("=== OSOBLJE KLIJENT ===");
 
             Socket osobljeSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
@@ -37,10 +37,11 @@ namespace OsobljeKlijent
                             string poruka = Encoding.UTF8.GetString(buffer, 0, primljeno);
                             Console.WriteLine($"\n[STIGAO ZADATAK]: {poruka}");
 
-                            string odgovor = $"POTVRDA_IZVRSENJA|Primljeno: {poruka}";
-                            byte[] odgovorBajtovi = Encoding.UTF8.GetBytes(odgovor);
+                            string odgovorServeru = IzvrsiZadatak(poruka);
+
+                            byte[] odgovorBajtovi = Encoding.UTF8.GetBytes(odgovorServeru);
                             osobljeSocket.Send(odgovorBajtovi);
-                            Console.WriteLine("[INFO]: Potvrda o izvršenju poslata serveru.");
+                            Console.WriteLine("[INFO]: Status apartmana ažuriran. Potvrda poslata.");
                         }
                     }
                     catch (SocketException ex)
@@ -68,6 +69,36 @@ namespace OsobljeKlijent
                 Console.WriteLine("Konekcija zatvorena. Pritisnite bilo koji taster...");
                 Console.ReadKey();
             }
+        }
+
+        static string IzvrsiZadatak(string poruka)
+        {
+            string statusPoruka = "";
+
+            if (poruka.Contains("ZADATAK"))
+            {
+                Console.WriteLine("Osoblje vrši pripremu sobe i obnovu minibara...");
+                Thread.Sleep(2000); 
+                statusPoruka = "Soba je očišćena i minibar je dopunjen.";
+            }
+            else if (poruka.Contains("HITNO") || poruka.Contains("ALARM"))
+            {
+                Console.WriteLine("Osoblje hitno izlazi na teren radi sanacije alarma...");
+                Thread.Sleep(3000);
+                statusPoruka = "Alarm saniran, stanje sobe vraćeno u normalu.";
+            }
+            else if (poruka.Contains("NARUDZBINA"))
+            {
+                Console.WriteLine("-> Dostava narudžbine u toku...");
+                Thread.Sleep(1500);
+                statusPoruka = "Narudžbina uspešno dostavljena.";
+            }
+            else
+            {
+                statusPoruka = "Zadatak obavljen.";
+            }
+
+            return $"POTVRDA_IZVRSENJA|{statusPoruka}";
         }
     }
 }
