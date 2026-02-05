@@ -47,7 +47,7 @@ namespace Server
                         Socket noviKlijent = listenSocket.Accept();
                         noviKlijent.Blocking = false;
                         klijenti.Add(noviKlijent);
-                        Console.WriteLine($"[TCP] Osoblje se povezalo.");
+                        Console.WriteLine($" Osoblje se povezalo.");
                     }
                     else if (s == udpSocket) 
                     {
@@ -68,9 +68,11 @@ namespace Server
                             {
                                 s.Close();
                                 klijenti.Remove(s);
+                                Console.WriteLine("Osoblje se odjavilo.");
                                 break;
                             }
-                            Console.WriteLine($"[OSOBLJE POTVRDA]: {Encoding.UTF8.GetString(buffer, 0, primljeno)}");
+                            string odgovorOsoblja = Encoding.UTF8.GetString(buffer, 0, primljeno);
+                            Console.WriteLine($"[POTVRDA OSOBLJA]: {odgovorOsoblja}");
                         }
                         catch
                         {
@@ -94,6 +96,19 @@ namespace Server
                 {
                     string odgovor = mojHotel.ObradiRezervaciju((KlasaApartmana)kl, br);
                     server.SendTo(Encoding.UTF8.GetBytes(odgovor), ep);
+                    Console.WriteLine($"[UDP -> GOST]: {odgovor}");
+
+                    if (odgovor.Contains("POTVRDA"))
+                    {
+                        string zadatak = "ZADATAK|Pripremiti sobu (ciscenje, minibar)";
+                        byte[] zadatakBajtovi = Encoding.UTF8.GetBytes(zadatak);
+
+                        foreach (var radnik in klijenti)
+                        {
+                            if (radnik.Connected) radnik.Send(zadatakBajtovi);
+                        }
+                        Console.WriteLine("[OSOBLJE]: Zadatak poslat.");
+                    }
                 }
             }
             else if (komanda == "ALARM" && delovi.Length >= 2)
