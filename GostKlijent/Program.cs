@@ -31,9 +31,9 @@ namespace GostKlijent
                 byte[] podaci = noviGost.Serialize();
 
                 // 5. Slanje podataka serveru
-                klijentSocket.SendTo(podaci, serverEP);
+                klijentSocket.SendTo(podaci, 0, podaci.Length, SocketFlags.None, serverEP);
 
-                Console.WriteLine($"[UDP] Zahtev za rezervaciju poslat za: {noviGost.Ime} {noviGost.Prezime}");
+                Console.WriteLine($"Zahtev za rezervaciju poslat za: {noviGost.Ime} {noviGost.Prezime}");
             }
             catch (Exception ex)
             {
@@ -41,6 +41,7 @@ namespace GostKlijent
             }
 
             Console.WriteLine("Pritisni bilo koji taster za izlaz...");
+            klijentSocket.Close();
             Console.ReadKey();
 
         }

@@ -4,11 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Domen.Entiteti
 {
+    [Serializable]
     public class Apartman : IMreznaPoruka
     {
         public int BrojApartmana { get; set; }
@@ -23,8 +25,6 @@ namespace Domen.Entiteti
         public Apartman()
         {
             ListaGostiju = new List<Gost>();
-            Stanje = StanjeApartmana.PRAZAN;
-            Alarm = StanjeAlarma.NORMALNO;
         }
         public Apartman(int broj, int sprat, KlasaApartmana klasa, int maxGostiju)
         {
@@ -42,25 +42,9 @@ namespace Domen.Entiteti
         {
             using (MemoryStream ms = new MemoryStream())
             {
-                using (BinaryWriter writer = new BinaryWriter(ms))
-                {
-                    writer.Write(BrojApartmana);
-                    writer.Write(Sprat);
-                    writer.Write((int)Klasa);
-                    writer.Write(MaxBrojGostiju);
-                    writer.Write(TrenutniBrojGostiju);
-                    writer.Write((int)Stanje);
-                    writer.Write((int)Alarm);
-
-                    writer.Write(ListaGostiju.Count);
-                    foreach (Gost gost in ListaGostiju)
-                    {
-                        byte[] gostBytes = gost.Serialize();
-                        writer.Write(gostBytes.Length);
-                        writer.Write(gostBytes);
-                    }
-                    return ms.ToArray();
-                }
+                BinaryFormatter bf = new BinaryFormatter();
+                bf.Serialize(ms, this);
+                return ms.ToArray();
             }
         }
 
@@ -68,28 +52,8 @@ namespace Domen.Entiteti
         {
             using (MemoryStream ms = new MemoryStream(data))
             {
-                using (BinaryReader reader = new BinaryReader(ms))
-                {
-                    Apartman apartman = new Apartman
-                    {
-                        BrojApartmana = reader.ReadInt32(),
-                        Sprat = reader.ReadInt32(),
-                        Klasa = (KlasaApartmana)reader.ReadInt32(),
-                        MaxBrojGostiju = reader.ReadInt32(),
-                        TrenutniBrojGostiju = reader.ReadInt32(),
-                        Stanje = (StanjeApartmana)reader.ReadInt32(),
-                        Alarm = (StanjeAlarma)reader.ReadInt32()
-                    };
-
-                    int brojGostiju = reader.ReadInt32();
-                    for (int i = 0; i < brojGostiju; i++)
-                    {
-                        int duzinaGosta = reader.ReadInt32();
-                        byte[] gostData = reader.ReadBytes(duzinaGosta);
-                        apartman.ListaGostiju.Add(Gost.Deserialize(gostData));
-                    }
-                    return apartman;
-                }
+                BinaryFormatter bf = new BinaryFormatter();
+                return (Apartman)bf.Deserialize(ms);
             }
         }
     }

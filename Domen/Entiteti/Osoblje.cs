@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Domen.Entiteti
 {
+    [Serializable]
     public class Osoblje : IMreznaPoruka
     {
         public string ID { get; set; }
@@ -31,32 +33,17 @@ namespace Domen.Entiteti
         {
             using (MemoryStream ms = new MemoryStream())
             {
-                using (BinaryWriter writer = new BinaryWriter(ms))
-                {
-                    writer.Write(ID);
-                    writer.Write(Ime);
-                    writer.Write(Prezime);
-                    writer.Write(Pol);
-                    writer.Write(Funkcija);
-                    return ms.ToArray();
-                }
+                BinaryFormatter bf = new BinaryFormatter();
+                bf.Serialize(ms, this);
+                return ms.ToArray();
             }
         }
         public static Osoblje Deserialize(byte[] data)
         {
             using (MemoryStream ms = new MemoryStream(data))
             {
-                using (BinaryReader reader = new BinaryReader(ms))
-                {
-                    return new Osoblje
-                    {
-                        ID = reader.ReadString(),
-                        Ime = reader.ReadString(),
-                        Prezime = reader.ReadString(),
-                        Pol = reader.ReadString(),
-                        Funkcija = reader.ReadString()
-                    };
-                }
+                BinaryFormatter bf = new BinaryFormatter();
+                return (Osoblje)bf.Deserialize(ms);
             }
         }
     }

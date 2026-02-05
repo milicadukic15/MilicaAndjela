@@ -3,11 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Domen.Entiteti
 {
+    [Serializable]
     public class Gost : IMreznaPoruka
     {
         public string Ime { get; set; }
@@ -30,32 +32,17 @@ namespace Domen.Entiteti
         {
             using (MemoryStream ms = new MemoryStream())
             {
-                using (BinaryWriter writer = new BinaryWriter(ms))
-                {
-                    writer.Write(Ime);
-                    writer.Write(Prezime);
-                    writer.Write(Pol);
-                    writer.Write(DatumRodjenja.ToBinary());
-                    writer.Write(BrojPasosa);
-                    return ms.ToArray();
-                }
+                BinaryFormatter bf = new BinaryFormatter();
+                bf.Serialize(ms, this); 
+                return ms.ToArray();
             }
         }
         public static Gost Deserialize(byte[] data)
         {
             using (MemoryStream ms = new MemoryStream(data))
             {
-                using (BinaryReader reader = new BinaryReader(ms))
-                {
-                    return new Gost
-                    {
-                        Ime = reader.ReadString(),
-                        Prezime = reader.ReadString(),
-                        Pol = reader.ReadString(),
-                        DatumRodjenja = DateTime.FromBinary(reader.ReadInt64()),
-                        BrojPasosa = reader.ReadString()
-                    };
-                }
+                BinaryFormatter bf = new BinaryFormatter();
+                return (Gost)bf.Deserialize(ms);
             }
         }
     }
