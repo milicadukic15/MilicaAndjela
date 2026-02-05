@@ -38,6 +38,9 @@ namespace GostKlijent
 
                 Console.WriteLine($"[SERVER ODGOVOR]: {odgovor}");
 
+                byte[] gostBajtovi = noviGost.Serialize();  //ovo sam dodala
+                gostSocket.SendTo(gostBajtovi, serverEP);
+
             }
             catch (Exception ex)
             {

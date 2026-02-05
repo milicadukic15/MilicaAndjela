@@ -108,6 +108,10 @@ namespace Server
                             if (radnik.Connected) radnik.Send(zadatakBajtovi);
                         }
                         Console.WriteLine("[OSOBLJE]: Zadatak poslat.");
+
+                        byte[] gostBuffer = new byte[1024];
+                        server.ReceiveFrom(gostBuffer, ref ep);
+                        Console.WriteLine("[ZADATAK 3]: Primljeni binarni podaci o gostu.");
                     }
                 }
             }
