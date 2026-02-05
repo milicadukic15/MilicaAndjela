@@ -9,3 +9,14 @@ C:\Users\User\OneDrive\Radna površina\MREZEprojekat\MilicaAndjela\OsobljeKlijen
 C:\Users\User\OneDrive\Radna površina\MREZEprojekat\MilicaAndjela\OsobljeKlijent\obj\Debug\OsobljeKlijent.exe
 C:\Users\User\OneDrive\Radna površina\MREZEprojekat\MilicaAndjela\OsobljeKlijent\obj\Debug\OsobljeKlijent.pdb
 C:\Users\User\OneDrive\Radna površina\MREZEprojekat\MilicaAndjela\OsobljeKlijent\obj\Debug\OsobljeKlijent.exe.config
+D:\MrezeMA\MilicaAndjela\OsobljeKlijent\bin\Debug\OsobljeKlijent.exe.config
+D:\MrezeMA\MilicaAndjela\OsobljeKlijent\bin\Debug\OsobljeKlijent.exe
+D:\MrezeMA\MilicaAndjela\OsobljeKlijent\bin\Debug\OsobljeKlijent.pdb
+D:\MrezeMA\MilicaAndjela\OsobljeKlijent\bin\Debug\Domen.dll
+D:\MrezeMA\MilicaAndjela\OsobljeKlijent\bin\Debug\Domen.pdb
+D:\MrezeMA\MilicaAndjela\OsobljeKlijent\obj\Debug\OsobljeKlijent.csproj.AssemblyReference.cache
+D:\MrezeMA\MilicaAndjela\OsobljeKlijent\obj\Debug\OsobljeKlijent.exe.config
+D:\MrezeMA\MilicaAndjela\OsobljeKlijent\obj\Debug\OsobljeKlijent.csproj.CoreCompileInputs.cache
+D:\MrezeMA\MilicaAndjela\OsobljeKlijent\obj\Debug\OsobljeK.2298E48D.Up2Date
+D:\MrezeMA\MilicaAndjela\OsobljeKlijent\obj\Debug\OsobljeKlijent.exe
+D:\MrezeMA\MilicaAndjela\OsobljeKlijent\obj\Debug\OsobljeKlijent.pdb

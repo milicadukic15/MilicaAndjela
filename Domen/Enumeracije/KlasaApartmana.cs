@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domen
+namespace Domen.Enumeracije
 {
-    internal class Class1
+    public enum KlasaApartmana
     {
+        PRVA = 1,
+        DRUGA = 2,
+        TRECA = 3
     }
 }

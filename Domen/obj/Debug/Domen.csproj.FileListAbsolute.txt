@@ -4,3 +4,9 @@ C:\Users\User\OneDrive\Radna površina\MREZEprojekat\MilicaAndjela\Domen\obj\Deb
 C:\Users\User\OneDrive\Radna površina\MREZEprojekat\MilicaAndjela\Domen\obj\Debug\Domen.csproj.CoreCompileInputs.cache
 C:\Users\User\OneDrive\Radna površina\MREZEprojekat\MilicaAndjela\Domen\obj\Debug\Domen.dll
 C:\Users\User\OneDrive\Radna površina\MREZEprojekat\MilicaAndjela\Domen\obj\Debug\Domen.pdb
+D:\MrezeMA\MilicaAndjela\Domen\bin\Debug\Domen.dll
+D:\MrezeMA\MilicaAndjela\Domen\bin\Debug\Domen.pdb
+D:\MrezeMA\MilicaAndjela\Domen\obj\Debug\Domen.csproj.AssemblyReference.cache
+D:\MrezeMA\MilicaAndjela\Domen\obj\Debug\Domen.csproj.CoreCompileInputs.cache
+D:\MrezeMA\MilicaAndjela\Domen\obj\Debug\Domen.dll
+D:\MrezeMA\MilicaAndjela\Domen\obj\Debug\Domen.pdb

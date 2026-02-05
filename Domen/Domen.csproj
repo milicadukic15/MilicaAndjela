@@ -41,7 +41,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="Entiteti\Apartman.cs" />
+    <Compile Include="Entiteti\Gost.cs" />
+    <Compile Include="Entiteti\Osoblje.cs" />
+    <Compile Include="Enumeracije\KlasaApartmana.cs" />
+    <Compile Include="Enumeracije\StanjeAlarma.cs" />
+    <Compile Include="Enumeracije\StanjeApartmana.cs" />
+    <Compile Include="Interface\IMreznaPoruka.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

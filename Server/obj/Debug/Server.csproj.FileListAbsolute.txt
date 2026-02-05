@@ -9,3 +9,14 @@ C:\Users\User\OneDrive\Radna površina\MREZEprojekat\MilicaAndjela\Server\obj\De
 C:\Users\User\OneDrive\Radna površina\MREZEprojekat\MilicaAndjela\Server\obj\Debug\Server.exe
 C:\Users\User\OneDrive\Radna površina\MREZEprojekat\MilicaAndjela\Server\obj\Debug\Server.pdb
 C:\Users\User\OneDrive\Radna površina\MREZEprojekat\MilicaAndjela\Server\obj\Debug\Server.exe.config
+D:\MrezeMA\MilicaAndjela\Server\bin\Debug\Server.exe.config
+D:\MrezeMA\MilicaAndjela\Server\bin\Debug\Server.exe
+D:\MrezeMA\MilicaAndjela\Server\bin\Debug\Server.pdb
+D:\MrezeMA\MilicaAndjela\Server\bin\Debug\Domen.dll
+D:\MrezeMA\MilicaAndjela\Server\bin\Debug\Domen.pdb
+D:\MrezeMA\MilicaAndjela\Server\obj\Debug\Server.csproj.AssemblyReference.cache
+D:\MrezeMA\MilicaAndjela\Server\obj\Debug\Server.exe.config
+D:\MrezeMA\MilicaAndjela\Server\obj\Debug\Server.csproj.CoreCompileInputs.cache
+D:\MrezeMA\MilicaAndjela\Server\obj\Debug\Server.csproj.Up2Date
+D:\MrezeMA\MilicaAndjela\Server\obj\Debug\Server.exe
+D:\MrezeMA\MilicaAndjela\Server\obj\Debug\Server.pdb
