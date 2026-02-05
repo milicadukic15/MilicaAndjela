@@ -1,0 +1,19 @@
+[
+  {
+    "Name": "CeoProjekat",
+    "Projects": [
+      {
+        "Path": "Server\\Server.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "GostKlijent\\GostKlijent.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "OsobljeKlijent\\OsobljeKlijent.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

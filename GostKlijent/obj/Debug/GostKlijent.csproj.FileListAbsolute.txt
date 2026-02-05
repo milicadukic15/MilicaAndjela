@@ -1,0 +1,11 @@
+C:\Users\User\OneDrive\Radna površina\MREZEprojekat\MilicaAndjela\GostKlijent\bin\Debug\GostKlijent.exe.config
+C:\Users\User\OneDrive\Radna površina\MREZEprojekat\MilicaAndjela\GostKlijent\bin\Debug\GostKlijent.exe
+C:\Users\User\OneDrive\Radna površina\MREZEprojekat\MilicaAndjela\GostKlijent\bin\Debug\GostKlijent.pdb
+C:\Users\User\OneDrive\Radna površina\MREZEprojekat\MilicaAndjela\GostKlijent\bin\Debug\Domen.dll
+C:\Users\User\OneDrive\Radna površina\MREZEprojekat\MilicaAndjela\GostKlijent\bin\Debug\Domen.pdb
+C:\Users\User\OneDrive\Radna površina\MREZEprojekat\MilicaAndjela\GostKlijent\obj\Debug\GostKlijent.csproj.AssemblyReference.cache
+C:\Users\User\OneDrive\Radna površina\MREZEprojekat\MilicaAndjela\GostKlijent\obj\Debug\GostKlijent.csproj.CoreCompileInputs.cache
+C:\Users\User\OneDrive\Radna površina\MREZEprojekat\MilicaAndjela\GostKlijent\obj\Debug\GostKlij.D161092D.Up2Date
+C:\Users\User\OneDrive\Radna površina\MREZEprojekat\MilicaAndjela\GostKlijent\obj\Debug\GostKlijent.exe
+C:\Users\User\OneDrive\Radna površina\MREZEprojekat\MilicaAndjela\GostKlijent\obj\Debug\GostKlijent.pdb
+C:\Users\User\OneDrive\Radna površina\MREZEprojekat\MilicaAndjela\GostKlijent\obj\Debug\GostKlijent.exe.config
