@@ -16,24 +16,28 @@ namespace GostKlijent
         {
             Console.WriteLine("=== GOST KLIJENT ===");
 
-            // 1. Kreiranje UDP utičnice
-            Socket klijentSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            Socket gostSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
-            // 2. Definisanje adrese servera (IP adresa tvog kompjutera i port 5000)
-            EndPoint serverEP = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5000);
+            EndPoint serverEP = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5005);
 
             try
             {
-                // 3. Kreiranje testnog gosta koristeći konstruktor iz Domena
                 Gost noviGost = new Gost("Marko", "Markovic", "Muski", new DateTime(1990, 5, 20), "123456789");
 
-                // 4. Serijalizacija (Zadatak 3 u praksi!)
-                byte[] podaci = noviGost.Serialize();
-
-                // 5. Slanje podataka serveru
-                klijentSocket.SendTo(podaci, 0, podaci.Length, SocketFlags.None, serverEP);
+                string komanda = "REZERVACIJA_UPIT|1|1";
+                byte[] komandaBajtovi = Encoding.UTF8.GetBytes(komanda);
+                gostSocket.SendTo(komandaBajtovi, serverEP);
 
                 Console.WriteLine($"Zahtev za rezervaciju poslat za: {noviGost.Ime} {noviGost.Prezime}");
+
+                byte[] buffer = new byte[1024];
+                EndPoint remoteEP = new IPEndPoint(IPAddress.Any, 0);
+
+                int primljeno = gostSocket.ReceiveFrom(buffer, ref remoteEP);
+                string odgovor = Encoding.UTF8.GetString(buffer, 0, primljeno);
+
+                Console.WriteLine($"[SERVER ODGOVOR]: {odgovor}");
+
             }
             catch (Exception ex)
             {
@@ -41,7 +45,7 @@ namespace GostKlijent
             }
 
             Console.WriteLine("Pritisni bilo koji taster za izlaz...");
-            klijentSocket.Close();
+            gostSocket.Close();
             Console.ReadKey();
 
         }
