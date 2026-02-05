@@ -133,7 +133,8 @@ namespace Server
 
                     if (odgovor.Contains("POTVRDA"))
                     {
-                        string zadatak = "ZADATAK|Pripremiti sobu (ciscenje, minibar)";
+                        string brojSobe = new string(odgovor.Where(char.IsDigit).ToArray());
+                        string zadatak = "ZADATAK|Pripremiti sobu {brojSobe} (ciscenje, minibar)";
                         byte[] zadatakBajtovi = Encoding.UTF8.GetBytes(zadatak);
 
                         foreach (var radnik in klijenti)

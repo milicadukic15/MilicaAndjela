@@ -20,3 +20,14 @@ D:\MrezeMA\MilicaAndjela\Server\obj\Debug\Server.csproj.CoreCompileInputs.cache
 D:\MrezeMA\MilicaAndjela\Server\obj\Debug\Server.csproj.Up2Date
 D:\MrezeMA\MilicaAndjela\Server\obj\Debug\Server.exe
 D:\MrezeMA\MilicaAndjela\Server\obj\Debug\Server.pdb
+C:\Users\Korisnik\OneDrive\Desktop\mreze proj\Server\bin\Debug\Server.exe.config
+C:\Users\Korisnik\OneDrive\Desktop\mreze proj\Server\bin\Debug\Server.exe
+C:\Users\Korisnik\OneDrive\Desktop\mreze proj\Server\bin\Debug\Server.pdb
+C:\Users\Korisnik\OneDrive\Desktop\mreze proj\Server\bin\Debug\Domen.dll
+C:\Users\Korisnik\OneDrive\Desktop\mreze proj\Server\bin\Debug\Domen.pdb
+C:\Users\Korisnik\OneDrive\Desktop\mreze proj\Server\obj\Debug\Server.csproj.AssemblyReference.cache
+C:\Users\Korisnik\OneDrive\Desktop\mreze proj\Server\obj\Debug\Server.exe.config
+C:\Users\Korisnik\OneDrive\Desktop\mreze proj\Server\obj\Debug\Server.csproj.CoreCompileInputs.cache
+C:\Users\Korisnik\OneDrive\Desktop\mreze proj\Server\obj\Debug\Server.csproj.Up2Date
+C:\Users\Korisnik\OneDrive\Desktop\mreze proj\Server\obj\Debug\Server.exe
+C:\Users\Korisnik\OneDrive\Desktop\mreze proj\Server\obj\Debug\Server.pdb

@@ -20,3 +20,14 @@ D:\MrezeMA\MilicaAndjela\GostKlijent\obj\Debug\GostKlijent.csproj.CoreCompileInp
 D:\MrezeMA\MilicaAndjela\GostKlijent\obj\Debug\GostKlij.D161092D.Up2Date
 D:\MrezeMA\MilicaAndjela\GostKlijent\obj\Debug\GostKlijent.exe
 D:\MrezeMA\MilicaAndjela\GostKlijent\obj\Debug\GostKlijent.pdb
+C:\Users\Korisnik\OneDrive\Desktop\mreze proj\GostKlijent\bin\Debug\GostKlijent.exe.config
+C:\Users\Korisnik\OneDrive\Desktop\mreze proj\GostKlijent\bin\Debug\GostKlijent.exe
+C:\Users\Korisnik\OneDrive\Desktop\mreze proj\GostKlijent\bin\Debug\GostKlijent.pdb
+C:\Users\Korisnik\OneDrive\Desktop\mreze proj\GostKlijent\bin\Debug\Domen.dll
+C:\Users\Korisnik\OneDrive\Desktop\mreze proj\GostKlijent\bin\Debug\Domen.pdb
+C:\Users\Korisnik\OneDrive\Desktop\mreze proj\GostKlijent\obj\Debug\GostKlijent.csproj.AssemblyReference.cache
+C:\Users\Korisnik\OneDrive\Desktop\mreze proj\GostKlijent\obj\Debug\GostKlijent.exe.config
+C:\Users\Korisnik\OneDrive\Desktop\mreze proj\GostKlijent\obj\Debug\GostKlijent.csproj.CoreCompileInputs.cache
+C:\Users\Korisnik\OneDrive\Desktop\mreze proj\GostKlijent\obj\Debug\GostKlij.D161092D.Up2Date
+C:\Users\Korisnik\OneDrive\Desktop\mreze proj\GostKlijent\obj\Debug\GostKlijent.exe
+C:\Users\Korisnik\OneDrive\Desktop\mreze proj\GostKlijent\obj\Debug\GostKlijent.pdb
