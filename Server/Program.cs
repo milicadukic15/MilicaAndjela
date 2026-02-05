@@ -7,126 +7,115 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 
 namespace Server
 {
-    public class Program
+    internal class Program
     {
 
-        static Socket udpGosti;
-        static Socket tcpOsoblje;
-        static List<Socket> povezanoOsoblje = new List<Socket>();
-        static List<Apartman> listaApartmana;
-        static bool kraj = false;
+        static Hotel mojHotel = new Hotel();
+        static List<TcpClient> povezanoOsoblje = new List<TcpClient>();
 
         static void Main(string[] args)
         {
-            Console.WriteLine("=== HOTELSKI SERVER ===");
+            TcpListener tcpServer = new TcpListener(IPAddress.Any, 8080);
+            tcpServer.Start();
+            UdpClient udpServer = new UdpClient(5005);
 
-            // 1. Inicijalizacija podataka
-            listaApartmana = InicijalizujHotel();
+            Console.WriteLine("SERVER POKRENUT...");
 
-            // 2. UDP Setup (Gosti)
-            udpGosti = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-            udpGosti.Bind(new IPEndPoint(IPAddress.Any, 5000));
-            udpGosti.Blocking = false;
-
-            // 3. TCP Setup (Osoblje)
-            tcpOsoblje = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            tcpOsoblje.Bind(new IPEndPoint(IPAddress.Any, 6000));
-            tcpOsoblje.Listen(5);
-            tcpOsoblje.Blocking = false;
-
-            Console.WriteLine("Server sluša: UDP(5000) i TCP(6000). Press ESC to stop.");
-
-            byte[] buffer = new byte[1024];
-            EndPoint remoteEP = new IPEndPoint(IPAddress.Any, 0);
-
-            try
+            while (true)
             {
-                while (!kraj)
+                if (tcpServer.Pending())
                 {
-                    // Formiranje listi za Select (baš kao u primeru)
-                    List<Socket> checkRead = new List<Socket> { udpGosti, tcpOsoblje };
-                    checkRead.AddRange(povezanoOsoblje); // Dodajemo sve radnike koji su online
+                    TcpClient klijent = tcpServer.AcceptTcpClient();
+                    povezanoOsoblje.Add(klijent);
+                    Console.WriteLine("[TCP] Osoblje povezano.");
+                }
 
-                    List<Socket> checkError = new List<Socket> { udpGosti, tcpOsoblje };
-                    checkError.AddRange(povezanoOsoblje);
-
-                    // Čekamo na događaj (timeout 1 sekunda)
-                    Socket.Select(checkRead, null, checkError, 1000000);
-
-                    if (checkRead.Count > 0)
+                foreach (TcpClient o in povezanoOsoblje.ToList()) 
+                {
+                    if (o.Connected && o.GetStream().DataAvailable)
                     {
-                        foreach (Socket s in checkRead)
-                        {
-                            if (s == udpGosti) // STIGAO UDP PAKET (GOST)
-                            {
-                                int brBajta = s.ReceiveFrom(buffer, ref remoteEP);
-                                byte[] podaci = new byte[brBajta];
-                                Array.Copy(buffer, podaci, brBajta);
+                        byte[] buffer = new byte[1024];
+                        int read = o.GetStream().Read(buffer, 0, buffer.Length);
+                        string odgovorOsoblja = Encoding.UTF8.GetString(buffer, 0, read);
 
-                                Gost g = Gost.Deserialize(podaci);
-                                Console.WriteLine($"Rezervacija: {g.Ime} {g.Prezime} (Sa: {remoteEP})");
-                            }
-                            else if (s == tcpOsoblje) // NOVA TCP KONEKCIJA (RADNIK)
-                            {
-                                Socket noviRadnik = s.Accept();
-                                noviRadnik.Blocking = false;
-                                povezanoOsoblje.Add(noviRadnik);
-                                Console.WriteLine($"Osoblje povezano: {noviRadnik.RemoteEndPoint}");
-                            }
-                            else // STIGLA PORUKA OD VEĆ POVEZANOG RADNIKA
-                            {
-                                int brBajta = s.Receive(buffer);
-                                if (brBajta == 0) // Radnik se diskonektovao
-                                {
-                                    Console.WriteLine($"Osoblje otislo: {s.RemoteEndPoint}");
-                                    s.Close();
-                                    povezanoOsoblje.Remove(s);
-                                    break;
-                                }
-                                else
-                                {
-                                    // Ovde bi išla deserijalizacija poruke od osoblja
-                                    string poruka = Encoding.UTF8.GetString(buffer, 0, brBajta);
-                                    Console.WriteLine($"[TCP Poruka]: {poruka}");
-                                }
-                            }
-                        }
+                        Console.WriteLine($"[OSOBLJE KLIJENT]: {odgovorOsoblja}");
+
                     }
+                }
 
-                    // Provera tastature za izlaz (Esc)
-                    if (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Escape)
-                        kraj = true;
+                if (udpServer.Available > 0)
+                {
+                    IPEndPoint gostEP = new IPEndPoint(IPAddress.Any, 0);
+                    byte[] data = udpServer.Receive(ref gostEP);
+                    string poruka = Encoding.UTF8.GetString(data);
+
+                    ObradiGosta(poruka, gostEP, udpServer);
+                }
+
+                System.Threading.Thread.Sleep(10); 
+            }
+        }
+
+        static void ObradiGosta(string poruka, IPEndPoint ep, UdpClient server)
+        {
+            if (string.IsNullOrEmpty(poruka)) return;
+
+            string[] delovi = poruka.Split('|');
+            string komanda = delovi[0];
+
+            if (delovi.Length < 2)
+            {
+                Console.WriteLine($"[GREŠKA] Primljena nevalidna poruka: {poruka}");
+                return;
+            }
+
+            if (komanda == "REZERVACIJA_UPIT" && delovi.Length >= 3)
+            {
+                if (int.TryParse(delovi[1], out int klasaBroj) && int.TryParse(delovi[2], out int brojGostiju))
+                {
+                    KlasaApartmana trazenaKlasa = (KlasaApartmana)klasaBroj;
+                    string odgovor = mojHotel.ObradiRezervaciju(trazenaKlasa, brojGostiju);
+                    byte[] data = Encoding.UTF8.GetBytes(odgovor);
+                    server.Send(data, data.Length, ep);
                 }
             }
-            catch (Exception ex)
+            else if (komanda == "ALARM")
             {
-                Console.WriteLine($"Greska: {ex.Message}");
+                if (int.TryParse(delovi[1], out int brojSobe))
+                {
+                    mojHotel.AktivirajAlarm(brojSobe);
+                    Console.WriteLine($"!!! ALARM SOBA {brojSobe} !!!");
+
+                    byte[] alert = Encoding.UTF8.GetBytes($"HITNO: Alarm u sobi {brojSobe}");
+                    foreach (var o in povezanoOsoblje)
+                    {
+                        if (o.Connected) o.GetStream().Write(alert, 0, alert.Length);
+                    }
+                }
             }
-
-            ZatvoriSve();
-        }
-
-        static List<Apartman> InicijalizujHotel()
-        {
-            return new List<Apartman>
+            else if (komanda == "NARUDZBINA" && delovi.Length >= 3)
             {
-                new Apartman(101, 3, KlasaApartmana.PRVA, 2),
-                new Apartman(102, 2, KlasaApartmana.DRUGA, 4),
-                new Apartman(201, 1, KlasaApartmana.TRECA, 5)
-            };
-        }
+                if (int.TryParse(delovi[1], out int brojSobe))
+                {
+                    string stavka = delovi[2];
+                    mojHotel.RegistrujNarudzbinu(brojSobe, stavka);
 
-        static void ZatvoriSve()
-        {
-            foreach (Socket s in povezanoOsoblje) s.Close();
-            udpGosti.Close();
-            tcpOsoblje.Close();
-            Console.WriteLine("Server zatvoren.");
+                    byte[] potvrdaGostu = Encoding.UTF8.GetBytes($"INFO|Narudžbina '{stavka}' primljena.");
+                    server.Send(potvrdaGostu, potvrdaGostu.Length, ep);
+
+                    byte[] zadatakOsoblju = Encoding.UTF8.GetBytes($"ZADATAK: Dostava {stavka} u sobu {brojSobe}");
+                    foreach (var o in povezanoOsoblje)
+                    {
+                        if (o.Connected) o.GetStream().Write(zadatakOsoblju, 0, zadatakOsoblju.Length);
+                    }
+                }
+            }
         }
 
     }
