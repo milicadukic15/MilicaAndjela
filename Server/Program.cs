@@ -31,6 +31,32 @@ namespace Server
 
             Console.WriteLine("SERVER POKRENUT...");
 
+
+            new Thread(() => {
+                while (true)
+                {
+                    Thread.Sleep(20000); 
+                    foreach (var b in mojHotel.Boravci.ToList())
+                    {
+                        b.PreostaloDana--;
+                        if (b.PreostaloDana <= 0)
+                        {
+                            string poruka = $"KRAJ|Boravak završen. Vaš račun (smeštaj + minibar + alarm) iznosi: {b.Racun} EUR. Molimo unesite broj kartice:";
+                            udpSocket.SendTo(Encoding.UTF8.GetBytes(poruka), b.GostEP);
+
+                            Apartman ap = mojHotel.Apartmani.First(a => a.BrojApartmana == b.BrojSobe);
+                            ap.Stanje = StanjeApartmana.POTREBNO_CISCENJE;
+                            mojHotel.Boravci.Remove(b);
+                        }
+                        else
+                        {
+                            udpSocket.SendTo(Encoding.UTF8.GetBytes($"INFO|Preostalo dana: {b.PreostaloDana}"), b.GostEP);
+                        }
+                    }
+                }
+            }).Start();
+
+
             while (true)
             {
                 List<Socket> checkRead = new List<Socket>();
@@ -128,11 +154,16 @@ namespace Server
                 string[] delovi = poruka.Split('|');
                 string komanda = delovi[0];
 
-                if (komanda == "REZERVACIJA_UPIT" && delovi.Length >= 3)
+
+                if (poruka == "DOSTUPNO")
                 {
-                    if (int.TryParse(delovi[1], out int kl) && int.TryParse(delovi[2], out int br))
+                    server.SendTo(Encoding.UTF8.GetBytes(mojHotel.ProveriDostupnost()), ep);
+                }
+                else if (komanda == "REZERVACIJA_UPIT" && delovi.Length >= 4)
+                {
+                    if (int.TryParse(delovi[1], out int kl) && int.TryParse(delovi[2], out int br) && int.TryParse(delovi[3], out int bn))
                     {
-                        string odgovor = mojHotel.ObradiRezervaciju((KlasaApartmana)kl, br);
+                        string odgovor = mojHotel.ObradiRezervaciju(kl, br, bn, ep);
                         server.SendTo(Encoding.UTF8.GetBytes(odgovor), ep);
                         Console.WriteLine($"Gost upit za klasu {kl} -> {odgovor}");
 
@@ -174,7 +205,7 @@ namespace Server
                 try
                 {
                     Gost g = Gost.Deserialize(buffer);
-                    Console.WriteLine($"Primljen serijalizovan gost: {g.Ime} {g.Prezime}, Pasoš: {g.BrojPasosa}");
+                    Console.WriteLine($"Primljen gost: {g.Ime} {g.Prezime}");
 
                 }
                 catch

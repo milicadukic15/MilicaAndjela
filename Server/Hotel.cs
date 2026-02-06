@@ -8,10 +8,18 @@ using System.Threading.Tasks;
 
 namespace Server
 {
+    public class AktivniBoravak
+    {
+        public int BrojSobe { get; set; }
+        public int PreostaloDana { get; set; }
+        public double Racun { get; set; }
+        public System.Net.EndPoint GostEP { get; set; }
+    }
     public class Hotel
     {
         public List<Apartman> Apartmani { get; set; } = new List<Apartman>();
         public List<string> ListaZadatakaZaOsoblje { get; set; } = new List<string>();
+        public List<AktivniBoravak> Boravci { get; set; } = new List<AktivniBoravak>();
 
         public Hotel()
         {
@@ -36,14 +44,21 @@ namespace Server
             return odgovor;
         }
 
-        public string ObradiRezervaciju(KlasaApartmana klasa, int brojGostiju)
+        public string ObradiRezervaciju(int klasa, int brojGostiju, int brojNoci, System.Net.EndPoint ep)
         {
             Apartman ap = Apartmani.FirstOrDefault(a => a.Stanje == StanjeApartmana.PRAZAN
-                                              && a.Klasa == klasa
+                                              && (int)a.Klasa == klasa
                                               && a.MaxBrojGostiju >= brojGostiju);
             if (ap != null)
             {
                 ap.Stanje = StanjeApartmana.ZAUZET;
+                Boravci.Add(new AktivniBoravak
+                {
+                    BrojSobe = ap.BrojApartmana,
+                    PreostaloDana = brojNoci,
+                    Racun = brojNoci * (50 * (int)ap.Klasa),
+                    GostEP = ep
+                });
                 return $"POTVRDA - Rezervisana soba {ap.BrojApartmana}";
             }
             return "ODBIJENO - Nema slobodnih soba tražene klase.";
@@ -55,6 +70,14 @@ namespace Server
             if (ap != null)
             {
                 ap.Alarm = StanjeAlarma.AKTIVIRAN;
+
+                AktivniBoravak boravak = Boravci.FirstOrDefault(b => b.BrojSobe == brojSobe);
+                if (boravak != null)
+                {
+                    boravak.Racun += 50.0; 
+                    Console.WriteLine($"[RAČUN]: Sobi {brojSobe} dodato 50 EUR za alarm. Ukupno: {boravak.Racun}");
+                }
+
                 ListaZadatakaZaOsoblje.Add($"HITNO: Alarm u sobi {brojSobe}!");
                 Console.WriteLine($"Alarm aktiviran u sobi {brojSobe}. Zadatak prosleđen osoblju.");
             }
@@ -65,6 +88,13 @@ namespace Server
             Apartman ap = Apartmani.FirstOrDefault(a => a.BrojApartmana == brojSobe);
             if (ap != null)
             {
+                AktivniBoravak boravak = Boravci.FirstOrDefault(b => b.BrojSobe == brojSobe);
+                if (boravak != null)
+                {
+                    boravak.Racun += 15.0; 
+                    Console.WriteLine($"[RAČUN]: Sobi {brojSobe} dodato 15 EUR za {stavka}. Ukupno: {boravak.Racun}");
+                }
+
                 ListaZadatakaZaOsoblje.Add($"NARUDŽBINA: Soba {brojSobe} traži {stavka}");
                 Console.WriteLine($"Narudžbina '{stavka}' zabeležena za sobu {brojSobe}.");
             }
