@@ -32,29 +32,29 @@ namespace Server
             Console.WriteLine("SERVER POKRENUT...");
 
 
-            new Thread(() => {
-                while (true)
-                {
-                    Thread.Sleep(20000); 
-                    foreach (var b in mojHotel.Boravci.ToList())
-                    {
-                        b.PreostaloDana--;
-                        if (b.PreostaloDana <= 0)
-                        {
-                            string poruka = $"KRAJ|Boravak završen. Vaš račun (smeštaj + minibar + alarm) iznosi: {b.Racun} EUR. Molimo unesite broj kartice:";
-                            udpSocket.SendTo(Encoding.UTF8.GetBytes(poruka), b.GostEP);
+             new Thread(() => {
+                 while (true)
+                 {
+                     Thread.Sleep(20000); 
+                     foreach (var b in mojHotel.Boravci.ToList())
+                     {
+                         b.PreostaloDana--;
+                         if (b.PreostaloDana <= 0)
+                         {
+                             string poruka = $"KRAJ|Boravak završen. Vaš račun (smeštaj + minibar + alarm) iznosi: {b.Racun} EUR. Molimo unesite broj kartice:";
+                             udpSocket.SendTo(Encoding.UTF8.GetBytes(poruka), b.GostEP);
 
-                            Apartman ap = mojHotel.Apartmani.First(a => a.BrojApartmana == b.BrojSobe);
-                            ap.Stanje = StanjeApartmana.POTREBNO_CISCENJE;
-                            mojHotel.Boravci.Remove(b);
-                        }
-                        else
-                        {
-                            udpSocket.SendTo(Encoding.UTF8.GetBytes($"INFO|Preostalo dana: {b.PreostaloDana}"), b.GostEP);
-                        }
-                    }
-                }
-            }).Start();
+                             Apartman ap = mojHotel.Apartmani.First(a => a.BrojApartmana == b.BrojSobe);
+                             ap.Stanje = StanjeApartmana.POTREBNO_CISCENJE;
+                             mojHotel.Boravci.Remove(b);
+                         }
+                         else
+                         {
+                             udpSocket.SendTo(Encoding.UTF8.GetBytes($"INFO|Preostalo dana: {b.PreostaloDana}"), b.GostEP);
+                         }
+                     }
+                 }
+             }).Start();
 
 
             while (true)
@@ -155,7 +155,7 @@ namespace Server
                 string komanda = delovi[0];
 
 
-                if (poruka == "DOSTUPNO")
+                if (komanda == "DOSTUPNO")
                 {
                     server.SendTo(Encoding.UTF8.GetBytes(mojHotel.ProveriDostupnost()), ep);
                 }
