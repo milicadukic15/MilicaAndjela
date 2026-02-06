@@ -22,6 +22,10 @@ namespace Domen.Entiteti
         public StanjeAlarma Alarm { get; set; }
         public List<Gost> ListaGostiju { get; set; } = new List<Gost>();
 
+        public double TrenutniRacun { get; set; } = 0;
+        public int PreostaloNoci { get; set; }
+        public int UkupnoNocenja { get; set; }
+
         public Apartman()
         {
             ListaGostiju = new List<Gost>();
@@ -38,6 +42,12 @@ namespace Domen.Entiteti
             ListaGostiju = new List<Gost>();
         }
 
+        public double CenaPoNoci()
+        {
+            if (Klasa == KlasaApartmana.PRVA) return 150;
+            if (Klasa == KlasaApartmana.DRUGA) return 100;
+            return 60;
+        }
         public byte[] Serialize()
         {
             using (MemoryStream ms = new MemoryStream())

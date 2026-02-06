@@ -55,8 +55,7 @@ namespace Server
                         EndPoint remoteEP = new IPEndPoint(IPAddress.Any, 0);
                         int primljeno = udpSocket.ReceiveFrom(buffer, ref remoteEP);
 
-                        string poruka = Encoding.UTF8.GetString(buffer, 0, primljeno);
-                        ObradiGosta(poruka, remoteEP, udpSocket);
+                        ObradiGosta(buffer, primljeno, remoteEP, udpSocket);
                     }
                     else 
                     {
@@ -118,48 +117,69 @@ namespace Server
             }
         }
 
-        static void ObradiGosta(string poruka, EndPoint ep, Socket server)
+        static void ObradiGosta(byte[] buffer, int primljeno, EndPoint ep, Socket server)
         {
-            string[] delovi = poruka.Split('|');
-            string komanda = delovi[0];
-
-            if (komanda == "REZERVACIJA_UPIT" && delovi.Length >= 3)
+            try
             {
-                if (int.TryParse(delovi[1], out int kl) && int.TryParse(delovi[2], out int br))
+                string poruka = Encoding.UTF8.GetString(buffer, 0, primljeno);
+
+                if (primljeno > 0 && buffer[0] < 32) throw new Exception("Binarni podaci");
+
+                string[] delovi = poruka.Split('|');
+                string komanda = delovi[0];
+
+                if (komanda == "REZERVACIJA_UPIT" && delovi.Length >= 3)
                 {
-                    string odgovor = mojHotel.ObradiRezervaciju((KlasaApartmana)kl, br);
-                    server.SendTo(Encoding.UTF8.GetBytes(odgovor), ep);
-                    Console.WriteLine($"[UDP -> GOST]: {odgovor}");
-
-                    if (odgovor.Contains("POTVRDA"))
+                    if (int.TryParse(delovi[1], out int kl) && int.TryParse(delovi[2], out int br))
                     {
-                        string brojSobe = new string(odgovor.Where(char.IsDigit).ToArray());
-                        string zadatak = "ZADATAK|Pripremiti sobu {brojSobe} (ciscenje, minibar)";
-                        byte[] zadatakBajtovi = Encoding.UTF8.GetBytes(zadatak);
+                        string odgovor = mojHotel.ObradiRezervaciju((KlasaApartmana)kl, br);
+                        server.SendTo(Encoding.UTF8.GetBytes(odgovor), ep);
+                        Console.WriteLine($"Gost upit za klasu {kl} -> {odgovor}");
 
-                        foreach (var radnik in klijenti)
+                        if (odgovor.Contains("POTVRDA"))
                         {
-                            if (radnik.Connected) radnik.Send(zadatakBajtovi);
+                            string brojSobe = new string(odgovor.Where(char.IsDigit).ToArray());
+
+                            string zadatak = $"ZADATAK|Pripremiti sobu {brojSobe} (ciscenje, minibar)";
+                            byte[] zadatakBajtovi = Encoding.UTF8.GetBytes(zadatak);
+
+                            foreach (var radnik in klijenti)
+                            {
+                                if (radnik.Connected) radnik.Send(zadatakBajtovi);
+                            }
                         }
                     }
                 }
-            }
-            else if (komanda == "ALARM" && delovi.Length >= 2)
-            {
-                if (int.TryParse(delovi[1], out int brojSobe))
+                else if (komanda == "ALARM" && delovi.Length >= 2)
                 {
-                    mojHotel.AktivirajAlarm(brojSobe);
-                    byte[] data = Encoding.UTF8.GetBytes($"HITNO: Alarm u sobi {brojSobe}");
-                    foreach (var k in klijenti) k.Send(data);
+                    if (int.TryParse(delovi[1], out int brojSobe))
+                    {
+                        mojHotel.AktivirajAlarm(brojSobe);
+                        byte[] data = Encoding.UTF8.GetBytes($"HITNO: Alarm u sobi {brojSobe}");
+                        foreach (var k in klijenti) k.Send(data);
+                    }
+                }
+                else if (komanda == "NARUDZBINA" && delovi.Length >= 3)
+                {
+                    if (int.TryParse(delovi[1], out int brojSobe))
+                    {
+                        mojHotel.RegistrujNarudzbinu(brojSobe, delovi[2]);
+                        byte[] data = Encoding.UTF8.GetBytes($"NARUDZBINA: {delovi[2]} za sobu {brojSobe}");
+                        foreach (var k in klijenti) k.Send(data);
+                    }
                 }
             }
-            else if (komanda == "NARUDZBINA" && delovi.Length >= 3)
+            catch
             {
-                if (int.TryParse(delovi[1], out int brojSobe))
+                try
                 {
-                    mojHotel.RegistrujNarudzbinu(brojSobe, delovi[2]);
-                    byte[] data = Encoding.UTF8.GetBytes($"NARUDZBINA: {delovi[2]} za sobu {brojSobe}");
-                    foreach (var k in klijenti) k.Send(data);
+                    Gost g = Gost.Deserialize(buffer);
+                    Console.WriteLine($"Primljen serijalizovan gost: {g.Ime} {g.Prezime}, Pasoš: {g.BrojPasosa}");
+
+                }
+                catch
+                {
+                    Console.WriteLine("[GRESKA]: Primljeni podaci se ne mogu prepoznati.");
                 }
             }
         }
