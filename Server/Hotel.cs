@@ -52,11 +52,12 @@ namespace Server
             if (ap != null)
             {
                 ap.Stanje = StanjeApartmana.ZAUZET;
+                double cenaSmestaja = brojNoci * ap.CenaPoNoci();
                 Boravci.Add(new AktivniBoravak
                 {
                     BrojSobe = ap.BrojApartmana,
                     PreostaloDana = brojNoci,
-                    Racun = brojNoci * (50 * (int)ap.Klasa),
+                    Racun = cenaSmestaja,
                     GostEP = ep
                 });
                 return $"POTVRDA - Rezervisana soba {ap.BrojApartmana}";
