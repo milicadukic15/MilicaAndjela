@@ -25,10 +25,15 @@ namespace Server
         {
             Apartmani.Add(new Apartman { BrojApartmana = 101, Sprat = 1, Klasa = KlasaApartmana.PRVA, MaxBrojGostiju = 2 });
             Apartmani.Add(new Apartman { BrojApartmana = 202, Sprat = 2, Klasa = KlasaApartmana.DRUGA, MaxBrojGostiju = 4 });
-            Apartmani.Add(new Apartman { BrojApartmana = 303, Sprat = 3, Klasa = KlasaApartmana.TRECA, MaxBrojGostiju = 1});
+            Apartmani.Add(new Apartman { BrojApartmana = 303, Sprat = 3, Klasa = KlasaApartmana.TRECA, MaxBrojGostiju = 6});
+            Apartmani.Add(new Apartman { BrojApartmana = 102, Sprat = 1, Klasa = KlasaApartmana.PRVA, MaxBrojGostiju = 2 });
+            Apartmani.Add(new Apartman { BrojApartmana = 204, Sprat = 2, Klasa = KlasaApartmana.DRUGA, MaxBrojGostiju = 3 });
+            Apartmani.Add(new Apartman { BrojApartmana = 306, Sprat = 3, Klasa = KlasaApartmana.TRECA, MaxBrojGostiju = 4 });
+            Apartmani.Add(new Apartman { BrojApartmana = 103, Sprat = 1, Klasa = KlasaApartmana.PRVA, MaxBrojGostiju = 1 });
+            Apartmani.Add(new Apartman { BrojApartmana = 206, Sprat = 2, Klasa = KlasaApartmana.DRUGA, MaxBrojGostiju = 3 });
+            Apartmani.Add(new Apartman { BrojApartmana = 309, Sprat = 3, Klasa = KlasaApartmana.TRECA, MaxBrojGostiju = 5 });
 
-            Apartmani[2].Stanje = StanjeApartmana.POTREBNO_CISCENJE;
-            ListaZadatakaZaOsoblje.Add("Soba 303: Potrebno generalno čišćenje.");
+   
         }
 
         public string ProveriDostupnost()
